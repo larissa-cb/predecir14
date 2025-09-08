@@ -1,4 +1,3 @@
-# app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6,14 +5,9 @@ import joblib
 import matplotlib.pyplot as plt
 
 # Configuración de la página
-st.set_page_config(
-    page_title="Sistema de Predicción de Deserción Universitaria",
-    page_icon="🎓",
-    layout="wide"
-)
-
+st.set_page_config(page_title="Deserción Universitaria", page_icon="🎓", layout="wide")
 st.title("🎓 Sistema de Alerta Temprana para Deserción Estudiantil")
-st.markdown("Este sistema utiliza un modelo **XGBoost** entrenado con datos reales para predecir el riesgo de abandono académico.")
+st.markdown("Este sistema utiliza un modelo **XGBoost** entrenado para predecir el riesgo de abandono académico.")
 
 # Cargar modelo entrenado
 @st.cache_resource
@@ -37,8 +31,7 @@ curricular_1st_approved = st.sidebar.slider("Materias 1º semestre aprobadas", 0
 curricular_1st_credited = st.sidebar.slider("Materias 1º semestre convalidadas", 0, 10, 2)
 
 # Botón para predecir
-if st.sidebar.button("🔍 Predecir Riesgo de Deserción"):
-    # Preprocesar datos
+if st.sidebar.button("🔍 Predecir Riesgo"):
     X_input = np.array([[
         curricular_2nd_approved,
         academic_efficiency / 100,
@@ -52,7 +45,6 @@ if st.sidebar.button("🔍 Predecir Riesgo de Deserción"):
         curricular_1st_credited
     ]])
 
-    # Hacer predicción
     prediction = model.predict(X_input)[0]
     probabilities = model.predict_proba(X_input)[0]
 
@@ -60,7 +52,6 @@ if st.sidebar.button("🔍 Predecir Riesgo de Deserción"):
     risk_level = risk_labels[prediction]
     confidence = probabilities[prediction]
 
-    # Mostrar resultados
     st.subheader("📊 Resultados de la Predicción")
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -72,7 +63,6 @@ if st.sidebar.button("🔍 Predecir Riesgo de Deserción"):
 
     st.progress(probabilities[0], text=f"Probabilidad de Alto Riesgo: {probabilities[0]*100:.1f}%")
 
-    # Tabla de probabilidades
     st.subheader("📈 Distribución de Probabilidades")
     df = pd.DataFrame({
         "Categoría": risk_labels,
@@ -80,7 +70,6 @@ if st.sidebar.button("🔍 Predecir Riesgo de Deserción"):
     })
     st.dataframe(df, hide_index=True, use_container_width=True)
 
-    # Gráfico de importancia de características (estático)
     st.subheader("📊 Importancia de Características")
     importance = {
         "Materias 2º semestre aprobadas": 0.2337,
@@ -104,3 +93,5 @@ if st.sidebar.button("🔍 Predecir Riesgo de Deserción"):
 
 else:
     st.info("👈 Introduce los datos en la barra lateral y pulsa 'Predecir Riesgo'.")
+
+
