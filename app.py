@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
 import matplotlib.pyplot as plt
+import joblib
+model = joblib.load("best_model.pkl")
 
 # Configuración de la página
 st.set_page_config(page_title="Deserción Universitaria", page_icon="🎓", layout="wide")
@@ -46,7 +47,7 @@ if st.sidebar.button("🔍 Predecir Riesgo"):
     ]])
 
     prediction = model.predict(X_input)[0]
-    probabilities = model.predict_proba(X_input)[0]
+probabilities = model.predict_proba(X_input)[0]
 
     risk_labels = ["🚨 Alto Riesgo", "⚠️ Riesgo Medio", "✅ Bajo Riesgo"]
     risk_level = risk_labels[prediction]
@@ -93,5 +94,6 @@ if st.sidebar.button("🔍 Predecir Riesgo"):
 
 else:
     st.info("👈 Introduce los datos en la barra lateral y pulsa 'Predecir Riesgo'.")
+
 
 
